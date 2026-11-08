@@ -1,0 +1,1120 @@
+[mod]
+id = "skyhanni"
+version = "9.3.0"
+priority = 100
+
+# Raw targets are exact functions of one Horizon commit: build on that commit.
+[compatibility]
+horizon_revision = "a46ce6898bd72016e061aaec1afc1375b384deac"
+
+[[module]]
+id = "runtime"
+file = "crates/horizon-client/src/game.rs"
+name = "port_skyhanni"
+source = "runtime.rs"
+
+[[module]]
+id = "game_side"
+file = "crates/horizon-client/src/game.rs"
+name = "port_skyhanni_game"
+source = "game_side.rs"
+
+[[injection]]
+id = "list"
+kind = "HEAD"
+target = "horizon_client::game::native_hooks::Game<'_>::native_mods"
+helper = "list.rs"
+bindings = [
+  { name = "mods", ty = "&mut Vec<crate::game::native_hooks::NativeMod>", value = "&mut *mods" },
+]
+
+[[injection]]
+id = "tick"
+kind = "HEAD"
+target = "horizon_client::game::native_hooks::Game<'_>::native_tick"
+helper = "tick.rs"
+bindings = [
+  { name = "game", ty = "&mut crate::game::Game<'_>", value = "&mut *self" },
+]
+
+[[injection]]
+id = "frame"
+kind = "HEAD"
+target = "horizon_client::game::native_hooks::Game<'_>::native_frame"
+helper = "frame.rs"
+bindings = [
+  { name = "game", ty = "&mut crate::game::Game<'_>", value = "&mut *self" },
+  { name = "elapsed", ty = "std::time::Duration", value = "elapsed" },
+]
+
+[[injection]]
+id = "hud"
+kind = "HEAD"
+target = "horizon_client::game::native_hooks::Game<'_>::native_hud"
+helper = "hud.rs"
+bindings = [
+  { name = "game", ty = "&mut crate::game::Game<'_>", value = "&mut *self" },
+  { name = "batch", ty = "&mut horizon_client::hud::HudBatch", value = "&mut *batch" },
+  { name = "corners", ty = "&mut horizon_client::extras_hud::Corners", value = "&mut *corners" },
+]
+
+[[injection]]
+id = "command"
+kind = "HEAD"
+target = "horizon_client::game::native_hooks::Game<'_>::native_command"
+helper = "command.rs"
+bindings = [
+  { name = "game", ty = "&mut crate::game::Game<'_>", value = "&mut *self" },
+  { name = "command", ty = "&str", value = "command" },
+  { name = "ran", ty = "&mut bool", value = "&mut *ran" },
+]
+
+[[injection]]
+id = "key"
+kind = "HEAD"
+target = "horizon_client::game::native_hooks::Game<'_>::native_key"
+helper = "key.rs"
+bindings = [
+  { name = "game", ty = "&mut crate::game::Game<'_>", value = "&mut *self" },
+  { name = "key", ty = "&str", value = "key" },
+  { name = "pressed", ty = "bool", value = "pressed" },
+]
+
+[[injection]]
+id = "wheel"
+kind = "HEAD"
+target = "horizon_client::game::native_hooks::Game<'_>::native_wheel"
+helper = "wheel.rs"
+bindings = [
+  { name = "game", ty = "&mut crate::game::Game<'_>", value = "&mut *self" },
+  { name = "steps", ty = "f32", value = "steps" },
+  { name = "claimed", ty = "&mut bool", value = "&mut *claimed" },
+]
+
+[[injection]]
+id = "settings"
+kind = "HEAD"
+target = "horizon_client::game::native_hooks::Game<'_>::native_settings"
+helper = "settings.rs"
+bindings = [
+  { name = "game", ty = "&mut crate::game::Game<'_>", value = "&mut *self" },
+  { name = "mod_id", ty = "&str", value = "mod_id" },
+  { name = "buttons", ty = "&mut Vec<String>", value = "&mut *buttons" },
+]
+
+[[injection]]
+id = "click"
+kind = "HEAD"
+target = "horizon_client::game::native_hooks::Game<'_>::native_settings_click"
+helper = "click.rs"
+bindings = [
+  { name = "game", ty = "&mut crate::game::Game<'_>", value = "&mut *self" },
+  { name = "mod_id", ty = "&str", value = "mod_id" },
+  { name = "button", ty = "usize", value = "button" },
+]
+
+# Off: @Inject(HEAD) on ScreenConstructor.fromPacket (MenuScreensConstructorMixin.skyHanni$openCustomMenu)
+#   No Horizon function mapped for ScreenConstructor.fromPacket (run `match`, or map it in a --mappings file).
+# [[injection]]
+# id = "menu-screens-constructor-mixin-open-custom-menu"
+# kind = "HEAD"
+# target = "TODO"
+
+# Off: @Inject(HEAD) on AbstractContainerScreen.extractRenderState (MixinAbstractContainerScreen.renderHead)
+#   No Horizon function mapped for AbstractContainerScreen.extractRenderState (run `match`, or map it in a --mappings file).
+# [[injection]]
+# id = "mixin-abstract-container-screen-render-head"
+# kind = "HEAD"
+# target = "TODO"
+
+# Off: @Inject(TAIL) on AbstractContainerScreen.extractRenderState (MixinAbstractContainerScreen.renderTail)
+#   No Horizon function mapped for AbstractContainerScreen.extractRenderState (run `match`, or map it in a --mappings file).
+# [[injection]]
+# id = "mixin-abstract-container-screen-render-tail"
+# kind = "RETURN"
+# target = "TODO"
+
+# Off: @Inject(INVOKE) on AbstractContainerScreen.extractContents (MixinAbstractContainerScreen.renderBackgroundTexture)
+#   No Horizon function mapped for AbstractContainerScreen.extractContents (run `match`, or map it in a --mappings file).
+# [[injection]]
+# id = "mixin-abstract-container-screen-render-background-texture"
+# kind = "AFTER_CALL"
+# target = "TODO"
+
+# Off: @ModifyArg(INVOKE) on AbstractContainerScreen.extractTooltip (MixinAbstractContainerScreen.renderBackground)
+#   No Horizon function mapped for AbstractContainerScreen.extractTooltip (run `match`, or map it in a --mappings file).
+# [[injection]]
+# id = "mixin-abstract-container-screen-render-background"
+# kind = "MODIFY_ARG"
+# target = "TODO"
+
+# Off: @Inject(HEAD) on AbstractContainerScreen.keyPressed (MixinAbstractContainerScreen.keyPressed)
+#   No Horizon function mapped for AbstractContainerScreen.keyPressed (run `match`, or map it in a --mappings file).
+# [[injection]]
+# id = "mixin-abstract-container-screen-key-pressed"
+# kind = "HEAD"
+# target = "TODO"
+
+# Off: @Inject(HEAD) on AbstractContainerScreen.mouseClicked (MixinAbstractContainerScreen.mouseClicked)
+#   No Horizon function mapped for AbstractContainerScreen.mouseClicked (run `match`, or map it in a --mappings file).
+# [[injection]]
+# id = "mixin-abstract-container-screen-mouse-clicked"
+# kind = "HEAD"
+# target = "TODO"
+
+# Off: @ModifyArg(INVOKE) on AbstractContainerScreen.extractLabels (MixinAbstractContainerScreen.customForegroundTextColor)
+#   No Horizon function mapped for AbstractContainerScreen.extractLabels (run `match`, or map it in a --mappings file).
+# [[injection]]
+# id = "mixin-abstract-container-screen-custom-foreground-text-color"
+# kind = "MODIFY_ARG"
+# target = "TODO"
+
+# Off: @WrapOperation(INVOKE) on AbstractContainerScreen.extractSlotHighlightBack (MixinAbstractContainerScreen.canBeHighlightedBack)
+#   No Horizon function mapped for AbstractContainerScreen.extractSlotHighlightBack (run `match`, or map it in a --mappings file).
+# [[injection]]
+# id = "mixin-abstract-container-screen-can-be-highlighted-back"
+# kind = "WRAP_OPERATION"
+# target = "TODO"
+
+# Off: @WrapOperation(INVOKE) on AbstractContainerScreen.extractSlotHighlightFront (MixinAbstractContainerScreen.canBeHighlightedFront)
+#   No Horizon function mapped for AbstractContainerScreen.extractSlotHighlightFront (run `match`, or map it in a --mappings file).
+# [[injection]]
+# id = "mixin-abstract-container-screen-can-be-highlighted-front"
+# kind = "WRAP_OPERATION"
+# target = "TODO"
+
+# Off: @ModifyExpressionValue(INVOKE) on AbstractContainerScreen.mouseClicked (MixinAbstractContainerScreen.fixMiddleClick)
+#   No Horizon function mapped for AbstractContainerScreen.mouseClicked (run `match`, or map it in a --mappings file).
+# [[injection]]
+# id = "mixin-abstract-container-screen-fix-middle-click"
+# kind = "MODIFY_EXPRESSION_VALUE"
+# target = "TODO"
+
+# Off: @Inject(INVOKE) on AbstractContainerScreen.keyPressed (MixinAbstractContainerScreen.closeWindowPressed)
+#   No Horizon function mapped for AbstractContainerScreen.keyPressed (run `match`, or map it in a --mappings file).
+# [[injection]]
+# id = "mixin-abstract-container-screen-close-window-pressed"
+# kind = "BEFORE_CALL"
+# target = "TODO"
+
+# Off: @Inject(INVOKE) on AbstractContainerScreen.extractContents (MixinAbstractContainerScreen.backgroundDrawn)
+#   No Horizon function mapped for AbstractContainerScreen.extractContents (run `match`, or map it in a --mappings file).
+# [[injection]]
+# id = "mixin-abstract-container-screen-background-drawn"
+# kind = "BEFORE_CALL"
+# target = "TODO"
+
+# Off: @Inject(HEAD) on AbstractContainerScreen.extractRenderState (MixinAbstractContainerScreen.preDraw)
+#   No Horizon function mapped for AbstractContainerScreen.extractRenderState (run `match`, or map it in a --mappings file).
+# [[injection]]
+# id = "mixin-abstract-container-screen-pre-draw"
+# kind = "HEAD"
+# target = "TODO"
+
+# Off: @Inject(TAIL) on AbstractContainerScreen.extractRenderState (MixinAbstractContainerScreen.postDraw)
+#   No Horizon function mapped for AbstractContainerScreen.extractRenderState (run `match`, or map it in a --mappings file).
+# [[injection]]
+# id = "mixin-abstract-container-screen-post-draw"
+# kind = "RETURN"
+# target = "TODO"
+
+# Off: @Inject(INVOKE) on AbstractContainerScreen.extractContents (MixinAbstractContainerScreen.onForegroundDraw)
+#   No Horizon function mapped for AbstractContainerScreen.extractContents (run `match`, or map it in a --mappings file).
+# [[injection]]
+# id = "mixin-abstract-container-screen-on-foreground-draw"
+# kind = "AFTER_CALL"
+# target = "TODO"
+
+# Off: @Inject(HEAD) on AbstractContainerScreen.extractSlot (MixinAbstractContainerScreen.onDrawSlot)
+#   No Horizon function mapped for AbstractContainerScreen.extractSlot (run `match`, or map it in a --mappings file).
+# [[injection]]
+# id = "mixin-abstract-container-screen-on-draw-slot"
+# kind = "HEAD"
+# target = "TODO"
+
+# Off: @Inject(RETURN) on AbstractContainerScreen.extractSlot (MixinAbstractContainerScreen.onDrawSlotReturn)
+#   No Horizon function mapped for AbstractContainerScreen.extractSlot (run `match`, or map it in a --mappings file).
+# [[injection]]
+# id = "mixin-abstract-container-screen-on-draw-slot-return"
+# kind = "RETURN"
+# target = "TODO"
+
+# Off: @Inject(INVOKE) on AbstractContainerScreen.extractContents (MixinAbstractContainerScreen.renderTooltipBackgroundTexture)
+#   No Horizon function mapped for AbstractContainerScreen.extractContents (run `match`, or map it in a --mappings file).
+# [[injection]]
+# id = "mixin-abstract-container-screen-render-tooltip-background-texture"
+# kind = "AFTER_CALL"
+# target = "TODO"
+
+# Off: @Inject(HEAD) on AbstractHurtingProjectile.createParticleTrail (MixinAbstractHurtingProjectile.onCreateParticleTrail)
+#   No Horizon function mapped for AbstractHurtingProjectile.createParticleTrail (run `match`, or map it in a --mappings file).
+# [[injection]]
+# id = "mixin-abstract-hurting-projectile-on-create-particle-trail"
+# kind = "HEAD"
+# target = "TODO"
+
+# Off: @Inject(HEAD) on AvatarRenderer.isEntityUpsideDown (MixinAvatarRenderer.shouldFlipUpsideDown)
+#   No Horizon function mapped for AvatarRenderer.isEntityUpsideDown (run `match`, or map it in a --mappings file).
+# [[injection]]
+# id = "mixin-avatar-renderer-should-flip-upside-down"
+# kind = "HEAD"
+# target = "TODO"
+
+# Off: @WrapOperation(INVOKE) on BaseFireBlock.animateTick (MixinBaseFireBlock.onAddParticle)
+#   No Horizon function mapped for BaseFireBlock.animateTick (run `match`, or map it in a --mappings file).
+# [[injection]]
+# id = "mixin-base-fire-block-on-add-particle"
+# kind = "WRAP_OPERATION"
+# target = "TODO"
+
+# Off: @WrapOperation(INVOKE) on Blaze.aiStep (MixinBlaze.onAddParticle)
+#   No Horizon function mapped for Blaze.aiStep (run `match`, or map it in a --mappings file).
+# [[injection]]
+# id = "mixin-blaze-on-add-particle"
+# kind = "WRAP_OPERATION"
+# target = "TODO"
+
+# Off: @Inject(HEAD) on BlockStateModelSet.get (MixinBlockStateModelSet.getModel)
+#   No Horizon function mapped for BlockStateModelSet.get (run `match`, or map it in a --mappings file).
+# [[injection]]
+# id = "mixin-block-state-model-set-get-model"
+# kind = "HEAD"
+# target = "TODO"
+
+# Off: @WrapWithCondition(INVOKE) on CapeLayer.submit (MixinCapeLayer.wrapChestplateCapeOffset)
+#   No Horizon function mapped for CapeLayer.submit (run `match`, or map it in a --mappings file).
+# [[injection]]
+# id = "mixin-cape-layer-wrap-chestplate-cape-offset"
+# kind = "WRAP_OPERATION"
+# target = "TODO"
+
+# Off: @ModifyArg(INVOKE) on CapeLayer.submit (MixinCapeLayer.replaceRenderLayer)
+#   No Horizon function mapped for CapeLayer.submit (run `match`, or map it in a --mappings file).
+# [[injection]]
+# id = "mixin-cape-layer-replace-render-layer"
+# kind = "MODIFY_ARG"
+# target = "TODO"
+
+# Off: @Inject(HEAD) on ChatComponent.getHeight (MixinChatComponent.getHeight)
+#   No Horizon function mapped for ChatComponent.getHeight (run `match`, or map it in a --mappings file).
+# [[injection]]
+# id = "mixin-chat-component-get-height"
+# kind = "HEAD"
+# target = "TODO"
+
+[[injection]]
+id = "mixin-chat-screen-mouse-clicked"
+kind = "HEAD"
+target = "horizon_client_render::chat::ChatScreen::click"
+helper = "mixin-chat-screen-mouse-clicked.rs"
+bindings = [
+  { name = "this", ty = "&mut ChatScreen", value = "&mut *self" },
+  { name = "m", ty = "&Measure", value = "m" },
+  { name = "c", ty = "&Commands", value = "c" },
+  { name = "x", ty = "f64", value = "x" },
+  { name = "y", ty = "f64", value = "y" },
+]
+
+# Off: @Inject(HEAD) on ClientLevel.addEntity (MixinClientLevel.onAddEntity)
+#   No Horizon function mapped for ClientLevel.addEntity (run `match`, or map it in a --mappings file).
+# [[injection]]
+# id = "mixin-client-level-on-add-entity"
+# kind = "HEAD"
+# target = "TODO"
+
+# Off: @Inject(HEAD) on ClientLevel.addDestroyBlockEffect (MixinClientLevel.onAddBlockBreakParticles)
+#   No Horizon function mapped for ClientLevel.addDestroyBlockEffect (run `match`, or map it in a --mappings file).
+# [[injection]]
+# id = "mixin-client-level-on-add-block-break-particles"
+# kind = "HEAD"
+# target = "TODO"
+
+# Off: @Inject(HEAD) on ClientLevel.addBreakingBlockEffect (MixinClientLevel.onAddBlockBreakingParticles)
+#   No Horizon function mapped for ClientLevel.addBreakingBlockEffect (run `match`, or map it in a --mappings file).
+# [[injection]]
+# id = "mixin-client-level-on-add-block-breaking-particles"
+# kind = "HEAD"
+# target = "TODO"
+
+# Off: @ModifyExpressionValue(INVOKE) on ClientPacketListener.tick (MixinClientPacketListener.shouldShowPacketSizeAndPingCharts)
+#   No Horizon function mapped for ClientPacketListener.tick (run `match`, or map it in a --mappings file).
+# [[injection]]
+# id = "mixin-client-packet-listener-should-show-packet-size-and-ping-charts"
+# kind = "MODIFY_EXPRESSION_VALUE"
+# target = "TODO"
+
+# Off: @Inject(INVOKE) on ClientPacketListener.handleParticleEvent (MixinClientPacketListener.postParticleEvent)
+#   No Horizon function mapped for ClientPacketListener.handleParticleEvent (run `match`, or map it in a --mappings file).
+# [[injection]]
+# id = "mixin-client-packet-listener-post-particle-event"
+# kind = "AFTER_CALL"
+# target = "TODO"
+
+# Off: @WrapOperation(INVOKE) on ClientPacketListener.handleParticleEvent (MixinClientPacketListener.wrapAddParticle)
+#   No Horizon function mapped for ClientPacketListener.handleParticleEvent (run `match`, or map it in a --mappings file).
+# [[injection]]
+# id = "mixin-client-packet-listener-wrap-add-particle"
+# kind = "WRAP_OPERATION"
+# target = "TODO"
+
+# Off: @Inject(INVOKE) on CommandDispatcher.getCompletionSuggestions (MixinCommandDispatcher.getCompletionSuggestions)
+#   No Horizon function mapped for CommandDispatcher.getCompletionSuggestions (run `match`, or map it in a --mappings file).
+# [[injection]]
+# id = "mixin-command-dispatcher-get-completion-suggestions"
+# kind = "BEFORE_CALL"
+# target = "TODO"
+
+# Off: @ModifyReturnValue(RETURN) on CommandDispatcher.getCompletionSuggestions (MixinCommandDispatcher.getCompletionSuggestionsWIthExisting)
+#   No Horizon function mapped for CommandDispatcher.getCompletionSuggestions (run `match`, or map it in a --mappings file).
+# [[injection]]
+# id = "mixin-command-dispatcher-get-completion-suggestions-w-ith-existing"
+# kind = "RETURN"
+# target = "TODO"
+
+# Off: @Inject(HEAD) on Connection.genericsFtw (MixinConnection.handlePacket$Inject$HEAD)
+#   No Horizon function mapped for Connection.genericsFtw (run `match`, or map it in a --mappings file).
+# [[injection]]
+# id = "mixin-connection-head"
+# kind = "HEAD"
+# target = "TODO"
+
+# Off: @Inject(HEAD) on Connection.send (MixinConnection.sendPacketNew)
+#   No Horizon function mapped for Connection.send (run `match`, or map it in a --mappings file).
+# [[injection]]
+# id = "mixin-connection-send-packet-new"
+# kind = "HEAD"
+# target = "TODO"
+
+# Off: @ModifyArg(INVOKE) on ContainerScreen.extractBackground (MixinContainerScreen.getCustomTexture)
+#   No Horizon function mapped for ContainerScreen.extractBackground (run `match`, or map it in a --mappings file).
+# [[injection]]
+# id = "mixin-container-screen-get-custom-texture"
+# kind = "MODIFY_ARG"
+# target = "TODO"
+
+# Off: @Inject(HEAD) on ContainerScreen.extractBackground (MixinContainerScreen.cancelWardrobeBackground)
+#   No Horizon function mapped for ContainerScreen.extractBackground (run `match`, or map it in a --mappings file).
+# [[injection]]
+# id = "mixin-container-screen-cancel-wardrobe-background"
+# kind = "HEAD"
+# target = "TODO"
+
+# Off: @WrapWithCondition(INVOKE) on CustomHeadLayer.submit (MixinCustomHeadLayer.onRenderArmor)
+#   No Horizon function mapped for CustomHeadLayer.submit (run `match`, or map it in a --mappings file).
+# [[injection]]
+# id = "mixin-custom-head-layer-on-render-armor"
+# kind = "WRAP_OPERATION"
+# target = "TODO"
+
+# Off: @WrapWithCondition(INVOKE) on CustomHeadLayer.submit (MixinCustomHeadLayer.onRenderItemstackOnHead)
+#   No Horizon function mapped for CustomHeadLayer.submit (run `match`, or map it in a --mappings file).
+# [[injection]]
+# id = "mixin-custom-head-layer-on-render-itemstack-on-head"
+# kind = "WRAP_OPERATION"
+# target = "TODO"
+
+# Off: @Inject(INVOKE) on Display.tick (MixinDisplay.onRenderSubStateUpdated)
+#   No Horizon function mapped for Display.tick (run `match`, or map it in a --mappings file).
+# [[injection]]
+# id = "mixin-display-on-render-sub-state-updated"
+# kind = "AFTER_CALL"
+# target = "TODO"
+
+# Off: @Inject(HEAD) on EnderMan.teleport (MixinEnderMan.onLivingUpdate)
+#   No Horizon function mapped for EnderMan.teleport (run `match`, or map it in a --mappings file).
+# [[injection]]
+# id = "mixin-ender-man-on-living-update"
+# kind = "HEAD"
+# target = "TODO"
+
+# Off: @Inject(RETURN) on Entity.getDisplayName (MixinEntity.getDisplayName)
+#   No Horizon function mapped for Entity.getDisplayName (run `match`, or map it in a --mappings file).
+# [[injection]]
+# id = "mixin-entity-get-display-name"
+# kind = "RETURN"
+# target = "TODO"
+
+# Off: @Inject(HEAD) on EntityRenderDispatcher.submit (MixinEntityRenderDispatcher.onRenderPre)
+#   No Horizon function mapped for EntityRenderDispatcher.submit (run `match`, or map it in a --mappings file).
+# [[injection]]
+# id = "mixin-entity-render-dispatcher-on-render-pre"
+# kind = "HEAD"
+# target = "TODO"
+
+# Off: @Inject(RETURN) on EntityRenderDispatcher.submit (MixinEntityRenderDispatcher.onRenderPost)
+#   No Horizon function mapped for EntityRenderDispatcher.submit (run `match`, or map it in a --mappings file).
+# [[injection]]
+# id = "mixin-entity-render-dispatcher-on-render-post"
+# kind = "RETURN"
+# target = "TODO"
+
+# Off: @Inject(HEAD) on EntityRenderDispatcher.shouldRender (MixinEntityRenderDispatcher.shouldRender)
+#   No Horizon function mapped for EntityRenderDispatcher.shouldRender (run `match`, or map it in a --mappings file).
+# [[injection]]
+# id = "mixin-entity-render-dispatcher-should-render"
+# kind = "HEAD"
+# target = "TODO"
+
+# Off: @Inject(HEAD) on EntityRenderer.submitNameDisplay (MixinEntityRenderer.onRenderLabelHead)
+#   No Horizon function mapped for EntityRenderer.submitNameDisplay (run `match`, or map it in a --mappings file).
+# [[injection]]
+# id = "mixin-entity-renderer-on-render-label-head"
+# kind = "HEAD"
+# target = "TODO"
+
+# Off: @Inject(TAIL) on EntityRenderer.submitNameDisplay (MixinEntityRenderer.onRenderLabelTail)
+#   No Horizon function mapped for EntityRenderer.submitNameDisplay (run `match`, or map it in a --mappings file).
+# [[injection]]
+# id = "mixin-entity-renderer-on-render-label-tail"
+# kind = "RETURN"
+# target = "TODO"
+
+# Off: @Inject(TAIL) on EntityRenderer.extractRenderState (MixinEntityRenderer.setEntity)
+#   No Horizon function mapped for EntityRenderer.extractRenderState (run `match`, or map it in a --mappings file).
+# [[injection]]
+# id = "mixin-entity-renderer-set-entity"
+# kind = "RETURN"
+# target = "TODO"
+
+# Off: @ModifyArg(INVOKE) on EntityRenderer.submitNameDisplay (MixinEntityRenderer.modifyRenderLabelIfPresentArgs)
+#   No Horizon function mapped for EntityRenderer.submitNameDisplay (run `match`, or map it in a --mappings file).
+# [[injection]]
+# id = "mixin-entity-renderer-modify-render-label-if-present-args"
+# kind = "MODIFY_ARG"
+# target = "TODO"
+
+# Off: @ModifyArg(INVOKE) on EquipmentLayerRenderer.renderLayers (MixinEquipmentLayerRenderer.replaceVertexConsumer)
+#   No Horizon function mapped for EquipmentLayerRenderer.renderLayers (run `match`, or map it in a --mappings file).
+# [[injection]]
+# id = "mixin-equipment-layer-renderer-replace-vertex-consumer"
+# kind = "MODIFY_ARG"
+# target = "TODO"
+
+# Off: @Inject(RETURN) on FluidStateModelSet.bake (MixinFluidStateModelSet.bake)
+#   No Horizon function mapped for FluidStateModelSet.bake (run `match`, or map it in a --mappings file).
+# [[injection]]
+# id = "mixin-fluid-state-model-set-bake"
+# kind = "RETURN"
+# target = "TODO"
+
+# Off: @ModifyReturnValue(RETURN) on FluidStateModelSet.get (MixinFluidStateModelSet.replaceLava)
+#   No Horizon function mapped for FluidStateModelSet.get (run `match`, or map it in a --mappings file).
+# [[injection]]
+# id = "mixin-fluid-state-model-set-replace-lava"
+# kind = "RETURN"
+# target = "TODO"
+
+# Off: @ModifyVariable(HEAD) on Font.prepareText (MixinFont.modifyOrderedText)
+#   No Horizon function mapped for Font.prepareText (run `match`, or map it in a --mappings file).
+# [[injection]]
+# id = "mixin-font-modify-ordered-text"
+# kind = "MODIFY_VARIABLE"
+# target = "TODO"
+
+# Off: @ModifyVariable(HEAD) on Font.prepareText (MixinFont.modifyString)
+#   No Horizon function mapped for Font.prepareText (run `match`, or map it in a --mappings file).
+# [[injection]]
+# id = "mixin-font-modify-string"
+# kind = "MODIFY_VARIABLE"
+# target = "TODO"
+
+# Off: @ModifyVariable(HEAD) on Font.width (MixinFont.modifyWidthOrderedText)
+#   Mapped to a helper call, not a function to inject into.
+# [[injection]]
+# id = "mixin-font-modify-width-ordered-text"
+# kind = "MODIFY_VARIABLE"
+# target = "TODO"
+
+# Off: @ModifyVariable(HEAD) on Font.width (MixinFont.modifyWidthString)
+#   Mapped to a helper call, not a function to inject into.
+# [[injection]]
+# id = "mixin-font-modify-width-string"
+# kind = "MODIFY_VARIABLE"
+# target = "TODO"
+
+# Off: @ModifyVariable(HEAD) on Font.width (MixinFont.modifyWidthFormattedText)
+#   Mapped to a helper call, not a function to inject into.
+# [[injection]]
+# id = "mixin-font-modify-width-formatted-text"
+# kind = "MODIFY_VARIABLE"
+# target = "TODO"
+
+# Off: @Inject(INVOKE) on GameRenderer.render (MixinGameRenderer262.clearChromaUniforms)
+#   Its target is the `frame` hook point, an empty function: AFTER_CALL has nothing inside it to select. Port it in the `frame` hook's helper.
+# [[injection]]
+# id = "mixin-game-renderer262-clear-chroma-uniforms"
+# kind = "AFTER_CALL"
+# target = "TODO"
+
+# Off: @ModifyReturnValue(RETURN) on GlyphRenderTypes.createForColorTexture (MixinGlyphRenderTypes.ofMethods)
+#   No Horizon function mapped for GlyphRenderTypes.createForColorTexture (run `match`, or map it in a --mappings file).
+# [[injection]]
+# id = "mixin-glyph-render-types-of-methods"
+# kind = "RETURN"
+# target = "TODO"
+
+# Off: @ModifyReturnValue(RETURN) on GlyphRenderTypes.createForIntensityTexture (MixinGlyphRenderTypes.ofMethods)
+#   No Horizon function mapped for GlyphRenderTypes.createForIntensityTexture (run `match`, or map it in a --mappings file).
+# [[injection]]
+# id = "mixin-glyph-render-types-of-methods-2"
+# kind = "RETURN"
+# target = "TODO"
+
+# Off: @Inject(HEAD) on GlyphRenderTypes.select (MixinGlyphRenderTypes.getRenderLayer)
+#   No Horizon function mapped for GlyphRenderTypes.select (run `match`, or map it in a --mappings file).
+# [[injection]]
+# id = "mixin-glyph-render-types-get-render-layer"
+# kind = "HEAD"
+# target = "TODO"
+
+# Off: @Inject(RETURN) on GuiGraphicsExtractor.item (MixinGuiGraphicsExtractor.drawItemPost)
+#   No Horizon function mapped for GuiGraphicsExtractor.item (run `match`, or map it in a --mappings file).
+# [[injection]]
+# id = "mixin-gui-graphics-extractor-draw-item-post"
+# kind = "RETURN"
+# target = "TODO"
+
+# Off: @Inject(RETURN) on GuiGraphicsExtractor.itemDecorations (MixinGuiGraphicsExtractor.drawItemDecorationsPost)
+#   `horizon_client_render::hud_overlays::item_decorations` has a closure in its body: horizon-mixins doesn't rewrite such bodies with RETURN. A HEAD hook on it, or a RETURN on a function it calls, may work instead.
+# [[injection]]
+# id = "mixin-gui-graphics-extractor-draw-item-decorations-post"
+# kind = "RETURN"
+# target = "horizon_client_render::hud_overlays::item_decorations"
+
+# Off: @Inject(INVOKE) on GuiGraphicsExtractor.componentHoverEffect (MixinGuiGraphicsExtractor.onRenderComponentHoverEffect)
+#   No Horizon function mapped for GuiGraphicsExtractor.componentHoverEffect (run `match`, or map it in a --mappings file).
+# [[injection]]
+# id = "mixin-gui-graphics-extractor-on-render-component-hover-effect"
+# kind = "AFTER_CALL"
+# target = "TODO"
+
+# Off: @ModifyArg(INVOKE) on GuiGraphicsExtractor.componentHoverEffect (MixinGuiGraphicsExtractor.replaceWithNewList)
+#   No Horizon function mapped for GuiGraphicsExtractor.componentHoverEffect (run `match`, or map it in a --mappings file).
+# [[injection]]
+# id = "mixin-gui-graphics-extractor-replace-with-new-list"
+# kind = "MODIFY_ARG"
+# target = "TODO"
+
+# Off: @ModifyArg(INVOKE) on GuiGraphicsExtractor.text (MixinGuiGraphicsExtractor.modifyVisualWordsTextState)
+#   No Horizon function mapped for GuiGraphicsExtractor.text (run `match`, or map it in a --mappings file).
+# [[injection]]
+# id = "mixin-gui-graphics-extractor-modify-visual-words-text-state"
+# kind = "MODIFY_ARG"
+# target = "TODO"
+
+# Off: @Inject(HEAD) on GuiRenderer.executeDrawRange (MixinGuiRenderer.computeChromaBufferSlice)
+#   No Horizon function mapped for GuiRenderer.executeDrawRange (run `match`, or map it in a --mappings file).
+# [[injection]]
+# id = "mixin-gui-renderer-compute-chroma-buffer-slice"
+# kind = "HEAD"
+# target = "TODO"
+
+# Off: @Inject(INVOKE) on GuiRenderer.executeDrawRange (MixinGuiRenderer.insertChromaSetUniform)
+#   No Horizon function mapped for GuiRenderer.executeDrawRange (run `match`, or map it in a --mappings file).
+# [[injection]]
+# id = "mixin-gui-renderer-insert-chroma-set-uniform"
+# kind = "AFTER_CALL"
+# target = "TODO"
+
+# Off: @WrapOperation(INVOKE) on GuiRenderer.addElementToMesh (MixinGuiRenderer.replacePipeline)
+#   No Horizon function mapped for GuiRenderer.addElementToMesh (run `match`, or map it in a --mappings file).
+# [[injection]]
+# id = "mixin-gui-renderer-replace-pipeline"
+# kind = "WRAP_OPERATION"
+# target = "TODO"
+
+# Off: @Inject(HEAD) on GuiRenderer.render (MixinGuiRenderer.skyhanni$trackFrameNumber)
+#   No Horizon function mapped for GuiRenderer.render (run `match`, or map it in a --mappings file).
+# [[injection]]
+# id = "mixin-gui-renderer-track-frame-number"
+# kind = "HEAD"
+# target = "TODO"
+
+# Off: @Inject(HEAD) on GuiRenderer.preparePictureInPicture (MixinGuiRenderer.skyhanni$preRenderAtlas)
+#   No Horizon function mapped for GuiRenderer.preparePictureInPicture (run `match`, or map it in a --mappings file).
+# [[injection]]
+# id = "mixin-gui-renderer-pre-render-atlas"
+# kind = "HEAD"
+# target = "TODO"
+
+# Off: @Inject(TAIL) on GuiRenderer.preparePictureInPicture (MixinGuiRenderer.skyhanni$evictUnusedRealtimeSlots)
+#   No Horizon function mapped for GuiRenderer.preparePictureInPicture (run `match`, or map it in a --mappings file).
+# [[injection]]
+# id = "mixin-gui-renderer-evict-unused-realtime-slots"
+# kind = "RETURN"
+# target = "TODO"
+
+# Off: @Inject(TAIL) on GuiRenderer.preparePictureInPictureState (MixinGuiRenderer.skyhanni$prepareSkyHanniItems)
+#   No Horizon function mapped for GuiRenderer.preparePictureInPictureState (run `match`, or map it in a --mappings file).
+# [[injection]]
+# id = "mixin-gui-renderer-prepare-sky-hanni-items"
+# kind = "RETURN"
+# target = "TODO"
+
+# Off: @ModifyVariable(STORE) on Gui.extractRenderState (MixinGui_GameRenderer.skyhanni$captureGuiGraphicsExtractor)
+#   No Horizon function mapped for Gui.extractRenderState (run `match`, or map it in a --mappings file).
+# [[injection]]
+# id = "mixin-gui-game-renderer-capture-gui-graphics-extractor"
+# kind = "MODIFY_VARIABLE"
+# target = "TODO"
+
+# Off: @Inject(INVOKE) on Gui.extractRenderState (MixinGui_GameRenderer.onRenderStartPhase)
+#   No Horizon function mapped for Gui.extractRenderState (run `match`, or map it in a --mappings file).
+# [[injection]]
+# id = "mixin-gui-game-renderer-on-render-start-phase"
+# kind = "BEFORE_CALL"
+# target = "TODO"
+
+# Off: @Inject(INVOKE) on Gui.extractRenderState (MixinGui_GameRenderer.onRenderEndPhase)
+#   No Horizon function mapped for Gui.extractRenderState (run `match`, or map it in a --mappings file).
+# [[injection]]
+# id = "mixin-gui-game-renderer-on-render-end-phase"
+# kind = "BEFORE_CALL"
+# target = "TODO"
+
+# Off: @Inject(INVOKE) on Gui.extractRenderState (MixinGui_GameRenderer.onRenderTail)
+#   No Horizon function mapped for Gui.extractRenderState (run `match`, or map it in a --mappings file).
+# [[injection]]
+# id = "mixin-gui-game-renderer-on-render-tail"
+# kind = "AFTER_CALL"
+# target = "TODO"
+
+# Off: @Inject(FIELD) on Gui.setScreen (MixinGui_Minecraft.onSetScreen)
+#   No horizon-mixins counterpart: FIELD, NEW, JUMP and CONSTANT points have no horizon-mixins counterpart yet.
+
+# Off: @Inject(HEAD) on Hud.displayScoreboardSidebar (MixinHud.renderScoreboard)
+#   No Horizon function mapped for Hud.displayScoreboardSidebar (run `match`, or map it in a --mappings file).
+# [[injection]]
+# id = "mixin-hud-render-scoreboard"
+# kind = "HEAD"
+# target = "TODO"
+
+# Off: @Inject(HEAD) on Hud.extractItemHotbar (MixinHud.renderHotbar)
+#   No Horizon function mapped for Hud.extractItemHotbar (run `match`, or map it in a --mappings file).
+# [[injection]]
+# id = "mixin-hud-render-hotbar"
+# kind = "HEAD"
+# target = "TODO"
+
+# Off: @Inject(TAIL) on Hud.extractItemHotbar (MixinHud.renderHotbarTail)
+#   No Horizon function mapped for Hud.extractItemHotbar (run `match`, or map it in a --mappings file).
+# [[injection]]
+# id = "mixin-hud-render-hotbar-tail"
+# kind = "RETURN"
+# target = "TODO"
+
+# Off: @Inject(INVOKE) on Hud.extractTabList (MixinHud.renderPlayerList)
+#   No Horizon function mapped for Hud.extractTabList (run `match`, or map it in a --mappings file).
+# [[injection]]
+# id = "mixin-hud-render-player-list"
+# kind = "BEFORE_CALL"
+# target = "TODO"
+
+# Off: @Inject(INVOKE) on Hud.extractHotbarAndDecorations (MixinHud.renderExperienceBar)
+#   No Horizon function mapped for Hud.extractHotbarAndDecorations (run `match`, or map it in a --mappings file).
+# [[injection]]
+# id = "mixin-hud-render-experience-bar"
+# kind = "BEFORE_CALL"
+# target = "TODO"
+
+# Off: @Inject(INVOKE) on Hud.extractHotbarAndDecorations (MixinHud.renderExperienceBarTail)
+#   No Horizon function mapped for Hud.extractHotbarAndDecorations (run `match`, or map it in a --mappings file).
+# [[injection]]
+# id = "mixin-hud-render-experience-bar-tail"
+# kind = "AFTER_CALL"
+# target = "TODO"
+
+# Off: @Inject(INVOKE) on Hud.extractHotbarAndDecorations (MixinHud.renderExperienceLevelHead)
+#   No Horizon function mapped for Hud.extractHotbarAndDecorations (run `match`, or map it in a --mappings file).
+# [[injection]]
+# id = "mixin-hud-render-experience-level-head"
+# kind = "BEFORE_CALL"
+# target = "TODO"
+
+# Off: @Inject(INVOKE) on Hud.extractHotbarAndDecorations (MixinHud.renderExperienceLevelTail)
+#   No Horizon function mapped for Hud.extractHotbarAndDecorations (run `match`, or map it in a --mappings file).
+# [[injection]]
+# id = "mixin-hud-render-experience-level-tail"
+# kind = "AFTER_CALL"
+# target = "TODO"
+
+# Off: @ModifyArg(INVOKE) on Hud.displayScoreboardSidebar (MixinHud.modifyScoreboardLine)
+#   No Horizon function mapped for Hud.displayScoreboardSidebar (run `match`, or map it in a --mappings file).
+# [[injection]]
+# id = "mixin-hud-modify-scoreboard-line"
+# kind = "MODIFY_ARG"
+# target = "TODO"
+
+# Off: @ModifyArg(INVOKE) on Hud.extractChat (MixinHud.modifyRenderText)
+#   No Horizon function mapped for Hud.extractChat (run `match`, or map it in a --mappings file).
+# [[injection]]
+# id = "mixin-hud-modify-render-text"
+# kind = "MODIFY_ARG"
+# target = "TODO"
+
+# Off: @Inject(HEAD) on Hud.extractSelectedItemName (MixinHud.renderSelectedItemNamePre)
+#   No Horizon function mapped for Hud.extractSelectedItemName (run `match`, or map it in a --mappings file).
+# [[injection]]
+# id = "mixin-hud-render-selected-item-name-pre"
+# kind = "HEAD"
+# target = "TODO"
+
+# Off: @Inject(TAIL) on Hud.extractSelectedItemName (MixinHud.renderSelectedItemNamePost)
+#   No Horizon function mapped for Hud.extractSelectedItemName (run `match`, or map it in a --mappings file).
+# [[injection]]
+# id = "mixin-hud-render-selected-item-name-post"
+# kind = "RETURN"
+# target = "TODO"
+
+# Off: @Inject(HEAD) on Hud.extractOverlayMessage (MixinHud.renderOverlayMessagePre)
+#   No Horizon function mapped for Hud.extractOverlayMessage (run `match`, or map it in a --mappings file).
+# [[injection]]
+# id = "mixin-hud-render-overlay-message-pre"
+# kind = "HEAD"
+# target = "TODO"
+
+# Off: @Inject(RETURN) on Hud.extractOverlayMessage (MixinHud.renderOverlayMessagePost)
+#   No Horizon function mapped for Hud.extractOverlayMessage (run `match`, or map it in a --mappings file).
+# [[injection]]
+# id = "mixin-hud-render-overlay-message-post"
+# kind = "RETURN"
+# target = "TODO"
+
+# Off: @Inject(HEAD) on HumanoidArmorLayer.renderArmorPiece (MixinHumanoidArmorLayer.onRenderArmor)
+#   No Horizon function mapped for HumanoidArmorLayer.renderArmorPiece (run `match`, or map it in a --mappings file).
+# [[injection]]
+# id = "mixin-humanoid-armor-layer-on-render-armor"
+# kind = "HEAD"
+# target = "TODO"
+
+# Off: @ModifyArg(INVOKE) on ItemFeatureRenderer.prepareOutlineSubmit (MixinItemFeatureRenderer.modifyAlpha)
+#   No Horizon function mapped for ItemFeatureRenderer.prepareOutlineSubmit (run `match`, or map it in a --mappings file).
+# [[injection]]
+# id = "mixin-item-feature-renderer-modify-alpha"
+# kind = "MODIFY_ARG"
+# target = "TODO"
+
+# Off: @ModifyExpressionValue(INVOKE) on ItemFeatureRenderer.prepareOutlineSubmit (MixinItemFeatureRenderer.modifyRenderLayer)
+#   No Horizon function mapped for ItemFeatureRenderer.prepareOutlineSubmit (run `match`, or map it in a --mappings file).
+# [[injection]]
+# id = "mixin-item-feature-renderer-modify-render-layer"
+# kind = "MODIFY_EXPRESSION_VALUE"
+# target = "TODO"
+
+# Off: @Inject(HEAD) on ItemStack.isEmpty (MixinItemStack.skyhanni$handleNullHolder)
+#   No Horizon function mapped for ItemStack.isEmpty (run `match`, or map it in a --mappings file).
+# [[injection]]
+# id = "mixin-item-stack-handle-null-holder"
+# kind = "HEAD"
+# target = "TODO"
+
+# Off: @Inject(INVOKE) on ItemStack.addToTooltip (MixinItemStack.blockVanillaEnchants)
+#   No Horizon function mapped for ItemStack.addToTooltip (run `match`, or map it in a --mappings file).
+# [[injection]]
+# id = "mixin-item-stack-block-vanilla-enchants"
+# kind = "BEFORE_CALL"
+# target = "TODO"
+
+# Off: @Inject(HEAD) on KeyMapping.isDown (MixinKeyMapping.noIsKeyDown)
+#   Mapped to a helper call, not a function to inject into.
+# [[injection]]
+# id = "mixin-key-mapping-no-is-key-down"
+# kind = "HEAD"
+# target = "TODO"
+
+# Off: @Inject(HEAD) on KeyMapping.consumeClick (MixinKeyMapping.noIsPressed)
+#   Mapped to a helper call, not a function to inject into.
+# [[injection]]
+# id = "mixin-key-mapping-no-is-pressed"
+# kind = "HEAD"
+# target = "TODO"
+
+# Off: @Inject(HEAD) on KeyboardHandler.charTyped (MixinKeyboardHandler.onChar)
+#   No Horizon function mapped for KeyboardHandler.charTyped (run `match`, or map it in a --mappings file).
+# [[injection]]
+# id = "mixin-keyboard-handler-on-char"
+# kind = "HEAD"
+# target = "TODO"
+
+# Off: @Inject(HEAD) on LevelExtractor.extractVisibleEntities (MixinLevelExtractor.resetRealGlowing)
+#   No Horizon function mapped for LevelExtractor.extractVisibleEntities (run `match`, or map it in a --mappings file).
+# [[injection]]
+# id = "mixin-level-extractor-reset-real-glowing"
+# kind = "HEAD"
+# target = "TODO"
+
+[[injection]]
+id = "mixin-living-entity-on-death"
+kind = "HEAD"
+target = "horizon_client::mobs::drops::die"
+helper = "mixin-living-entity-on-death.rs"
+bindings = [
+  { name = "m", ty = "&mut Mob", value = "&mut *m" },
+  { name = "d", ty = "&Death", value = "d" },
+  { name = "sequences", ty = "&mut RandomSequences", value = "&mut *sequences" },
+]
+
+# Off: @Inject(TAIL) on LivingEntity.setItemSlot (MixinLivingEntity.setItemStack)
+#   No Horizon function mapped for LivingEntity.setItemSlot (run `match`, or map it in a --mappings file).
+# [[injection]]
+# id = "mixin-living-entity-set-item-stack"
+# kind = "RETURN"
+# target = "TODO"
+
+# Off: @Inject(TAIL) on LivingEntityRenderer.extractRenderState (MixinLivingEntityRenderer.updateRenderState)
+#   No Horizon function mapped for LivingEntityRenderer.extractRenderState (run `match`, or map it in a --mappings file).
+# [[injection]]
+# id = "mixin-living-entity-renderer-update-render-state"
+# kind = "RETURN"
+# target = "TODO"
+
+# Off: @ModifyArg(INVOKE) on LivingEntityRenderer.submit (MixinLivingEntityRenderer.modifyRenderAlpha)
+#   No Horizon function mapped for LivingEntityRenderer.submit (run `match`, or map it in a --mappings file).
+# [[injection]]
+# id = "mixin-living-entity-renderer-modify-render-alpha"
+# kind = "MODIFY_ARG"
+# target = "TODO"
+
+# Off: @Inject(HEAD) on LivingEntityRenderer.getRenderType (MixinLivingEntityRenderer.getRenderState)
+#   No Horizon function mapped for LivingEntityRenderer.getRenderType (run `match`, or map it in a --mappings file).
+# [[injection]]
+# id = "mixin-living-entity-renderer-get-render-state"
+# kind = "HEAD"
+# target = "TODO"
+
+[[injection]]
+id = "mixin-minecraft-handle-right-click-mouse"
+kind = "HEAD"
+target = "horizon_client::first_person::Clicks::start_use_item"
+cancellable = true
+helper = "mixin-minecraft-handle-right-click-mouse.rs"
+bindings = [
+  { name = "this", ty = "&mut Clicks", value = "&mut *self" },
+  { name = "w", ty = "&mut impl HandWorld", value = "&mut *w" },
+]
+
+[[injection]]
+id = "mixin-minecraft-handle-left-click-mouse"
+kind = "HEAD"
+target = "horizon_client::first_person::Clicks::start_attack"
+cancellable = true
+helper = "mixin-minecraft-handle-left-click-mouse.rs"
+bindings = [
+  { name = "this", ty = "&mut Clicks", value = "&mut *self" },
+  { name = "w", ty = "&mut impl HandWorld", value = "&mut *w" },
+]
+
+# Off: MODIFY_VARIABLE needs the Rust local's name in `horizon_client::first_person::Clicks::continue_attack`: fill in `selector`/`variable`.
+# [[injection]]
+# id = "mixin-minecraft-handle-block-click"
+# kind = "MODIFY_VARIABLE"
+# target = "horizon_client::first_person::Clicks::continue_attack"
+# selector = "TODO"
+# require = 1
+# ordinal = 0
+# helper = "mixin-minecraft-handle-block-click.rs"
+
+# Off: @ModifyArg(INVOKE) on Model.renderToBuffer (MixinModel.modifyRenderAlpha)
+#   No Horizon function mapped for Model.renderToBuffer (run `match`, or map it in a --mappings file).
+# [[injection]]
+# id = "mixin-model-modify-render-alpha"
+# kind = "MODIFY_ARG"
+# target = "TODO"
+
+# Off: @Inject(RETURN) on MouseHandler.onMove (MixinMouseHandler.onMouseButton)
+#   No Horizon function mapped for MouseHandler.onMove (run `match`, or map it in a --mappings file).
+# [[injection]]
+# id = "mixin-mouse-handler-on-mouse-button"
+# kind = "RETURN"
+# target = "TODO"
+
+# Off: @Inject(HEAD) on MouseHandler.onButton (MixinMouseHandler.onMouseButton)
+#   No Horizon function mapped for MouseHandler.onButton (run `match`, or map it in a --mappings file).
+# [[injection]]
+# id = "mixin-mouse-handler-on-mouse-button-2"
+# kind = "HEAD"
+# target = "TODO"
+
+# Off: @WrapOperation(INVOKE) on MouseHandler.turnPlayer (MixinMouseHandler.modifyMouseSensitivity)
+#   No Horizon function mapped for MouseHandler.turnPlayer (run `match`, or map it in a --mappings file).
+# [[injection]]
+# id = "mixin-mouse-handler-modify-mouse-sensitivity"
+# kind = "WRAP_OPERATION"
+# target = "TODO"
+
+[[injection]]
+id = "mixin-particle-engine-on-create-particle"
+kind = "HEAD"
+target = "horizon_client_render::particles::ParticleEngine::create"
+cancellable = true
+helper = "mixin-particle-engine-on-create-particle.rs"
+bindings = [
+  { name = "this", ty = "&mut ParticleEngine", value = "&mut *self" },
+  { name = "options", ty = "&ParticleOptions", value = "options" },
+  { name = "p", ty = "&[f64; 3]", value = "&p" },
+  { name = "v", ty = "&[f64; 3]", value = "&v" },
+]
+
+# Off: @Inject(RETURN) on Player.getDisplayName (MixinPlayer.getDisplayName)
+#   Horizon splits Player.getDisplayName across 5 functions; pick one: horizon_client::lan::hub::display_name (crates/horizon-client/src/lan/hub.rs:230); horizon_client::lan::hub::Hub::player_display_name (crates/horizon-client/src/lan/hub.rs:263); horizon_client::game::commands::players::Game<'_>::player_text (crates/horizon-client/src/game/commands/players.rs:130); horizon_client::game::scoreboard::Game<'_>::player_display_comp (crates/horizon-client/src/game/scoreboard.rs:516); horizon_client::game::commands::Game<'_>::player_display_name (crates/horizon-client/src/game/commands.rs:238)
+# [[injection]]
+# id = "mixin-player-get-display-name"
+# kind = "RETURN"
+# target = "horizon_client::lan::hub::display_name"
+
+# Off: @Inject(INVOKE) on PreparedRenderType.drawFromBuffer (MixinPreparedRenderType.bindSkyHanniChromaUniform)
+#   No Horizon function mapped for PreparedRenderType.drawFromBuffer (run `match`, or map it in a --mappings file).
+# [[injection]]
+# id = "mixin-prepared-render-type-bind-sky-hanni-chroma-uniform"
+# kind = "AFTER_CALL"
+# target = "TODO"
+
+# Off: @Inject(INVOKE) on PreparedTextBuilder.visit (MixinPreparedTextBuilder.checkIfGlyphIsChroma)
+#   No Horizon function mapped for PreparedTextBuilder.visit (run `match`, or map it in a --mappings file).
+# [[injection]]
+# id = "mixin-prepared-text-builder-check-if-glyph-is-chroma"
+# kind = "BEFORE_CALL"
+# target = "TODO"
+
+# Off: @WrapOperation(INVOKE) on PreparedTextBuilder.accept (MixinPreparedTextBuilder.wrapGetColor)
+#   No Horizon function mapped for PreparedTextBuilder.accept (run `match`, or map it in a --mappings file).
+# [[injection]]
+# id = "mixin-prepared-text-builder-wrap-get-color"
+# kind = "WRAP_OPERATION"
+# target = "TODO"
+
+# Off: @ModifyArg(INVOKE) on PreparedTextBuilder.accept (MixinPreparedTextBuilder.forceChromaIfNecessary)
+#   No Horizon function mapped for PreparedTextBuilder.accept (run `match`, or map it in a --mappings file).
+# [[injection]]
+# id = "mixin-prepared-text-builder-force-chroma-if-necessary"
+# kind = "MODIFY_ARG"
+# target = "TODO"
+
+# Off: @WrapOperation(INVOKE) on Screen.extractRenderStateWithTooltipAndSubtitles (MixinScreen.wrapExtractBackground)
+#   No Horizon function mapped for Screen.extractRenderStateWithTooltipAndSubtitles (run `match`, or map it in a --mappings file).
+# [[injection]]
+# id = "mixin-screen-wrap-extract-background"
+# kind = "WRAP_OPERATION"
+# target = "TODO"
+
+# Off: @Inject(HEAD) on ScreenEffectRenderer.submitFire (MixinScreenEffectRenderer.renderFire)
+#   No Horizon function mapped for ScreenEffectRenderer.submitFire (run `match`, or map it in a --mappings file).
+# [[injection]]
+# id = "mixin-screen-effect-renderer-render-fire"
+# kind = "HEAD"
+# target = "TODO"
+
+# Off: @Inject(HEAD) on ScreenEffectRenderer.submitWater (MixinScreenEffectRenderer.renderWater)
+#   No Horizon function mapped for ScreenEffectRenderer.submitWater (run `match`, or map it in a --mappings file).
+# [[injection]]
+# id = "mixin-screen-effect-renderer-render-water"
+# kind = "HEAD"
+# target = "TODO"
+
+# Off: @Inject(HEAD) on ScreenEffectRenderer.submitBlockSprite (MixinScreenEffectRenderer.renderBlock)
+#   No Horizon function mapped for ScreenEffectRenderer.submitBlockSprite (run `match`, or map it in a --mappings file).
+# [[injection]]
+# id = "mixin-screen-effect-renderer-render-block"
+# kind = "HEAD"
+# target = "TODO"
+
+# Off: @ModifyExpressionValue(INVOKE) on SimpleContainer.getItem (MixinSimpleContainer.getStack)
+#   No Horizon function mapped for SimpleContainer.getItem (run `match`, or map it in a --mappings file).
+# [[injection]]
+# id = "mixin-simple-container-get-stack"
+# kind = "MODIFY_EXPRESSION_VALUE"
+# target = "TODO"
+
+# Off: @Inject(INVOKE) on SoundEngine.play (MixinSoundEngine.handleSound)
+#   No Horizon function mapped for SoundEngine.play (run `match`, or map it in a --mappings file).
+# [[injection]]
+# id = "mixin-sound-engine-handle-sound"
+# kind = "BEFORE_CALL"
+# target = "TODO"
+
+# Off: @ModifyExpressionValue(INVOKE) on SoundEngine.play (MixinSoundEngine.overrideSkyHanniSoundVolume)
+#   No Horizon function mapped for SoundEngine.play (run `match`, or map it in a --mappings file).
+# [[injection]]
+# id = "mixin-sound-engine-override-sky-hanni-sound-volume"
+# kind = "MODIFY_EXPRESSION_VALUE"
+# target = "TODO"
+
+# Off: @ModifyReturnValue(RETURN) on SoundEngine.calculateVolume (MixinSoundEngine.overrideSkyHanniSoundVolumeOnRefresh)
+#   No Horizon function mapped for SoundEngine.calculateVolume (run `match`, or map it in a --mappings file).
+# [[injection]]
+# id = "mixin-sound-engine-override-sky-hanni-sound-volume-on-refresh"
+# kind = "RETURN"
+# target = "TODO"
+
+# Off: @Inject(HEAD) on SplashManager.getSplash (MixinSplashManager.addSkyhanniSplash)
+#   No Horizon function mapped for SplashManager.getSplash (run `match`, or map it in a --mappings file).
+# [[injection]]
+# id = "mixin-splash-manager-add-skyhanni-splash"
+# kind = "HEAD"
+# target = "TODO"
+
+# Off: @Inject(HEAD) on StringDecomposer.iterateFormatted (MixinStringDecomposer.skyhanni$resetColorState)
+#   No Horizon function mapped for StringDecomposer.iterateFormatted (run `match`, or map it in a --mappings file).
+# [[injection]]
+# id = "mixin-string-decomposer-reset-color-state"
+# kind = "HEAD"
+# target = "TODO"
+
+# Off: @WrapOperation(INVOKE) on StringDecomposer.iterateFormatted (MixinStringDecomposer.skyhanni$onGetByCode)
+#   No Horizon function mapped for StringDecomposer.iterateFormatted (run `match`, or map it in a --mappings file).
+# [[injection]]
+# id = "mixin-string-decomposer-on-get-by-code"
+# kind = "WRAP_OPERATION"
+# target = "TODO"
+
+# Off: @WrapOperation(INVOKE) on StringDecomposer.iterateFormatted (MixinStringDecomposer.skyhanni$onApplyLegacyFormat)
+#   No Horizon function mapped for StringDecomposer.iterateFormatted (run `match`, or map it in a --mappings file).
+# [[injection]]
+# id = "mixin-string-decomposer-on-apply-legacy-format"
+# kind = "WRAP_OPERATION"
+# target = "TODO"
+
+# Off: @ModifyArg(INVOKE) on StringDecomposer.iterateFormatted (MixinStringDecomposer.skyhanni$applyActiveHexColor)
+#   No Horizon function mapped for StringDecomposer.iterateFormatted (run `match`, or map it in a --mappings file).
+# [[injection]]
+# id = "mixin-string-decomposer-apply-active-hex-color"
+# kind = "MODIFY_ARG"
+# target = "TODO"
+
+# Off: @ModifyVariable(INVOKE_ASSIGN) on StringDecomposer.iterateFormatted (MixinStringDecomposer.onColorCodeCheck)
+#   No Horizon function mapped for StringDecomposer.iterateFormatted (run `match`, or map it in a --mappings file).
+# [[injection]]
+# id = "mixin-string-decomposer-on-color-code-check"
+# kind = "MODIFY_VARIABLE"
+# target = "TODO"
+
+# Off: MODIFY_VARIABLE needs the Rust local's name in `horizon_client_render::font::Font::split_lines`: fill in `selector`/`variable`.
+# [[injection]]
+# id = "mixin-string-splitter-modify-string-visitable"
+# kind = "MODIFY_VARIABLE"
+# target = "horizon_client_render::font::Font::split_lines"
+# selector = "TODO"
+# require = 1
+# ordinal = 0
+# helper = "mixin-string-splitter-modify-string-visitable.rs"
+
+# Off: @Inject(TAIL) on SynchedEntityData.assignValues (MixinSynchedEntityData.onWhatever)
+#   No Horizon function mapped for SynchedEntityData.assignValues (run `match`, or map it in a --mappings file).
+# [[injection]]
+# id = "mixin-synched-entity-data-on-whatever"
+# kind = "RETURN"
+# target = "TODO"
+
+# Off: @Inject(TAIL) on TextColor.equals (MixinTextColor.chromaEqualityFix)
+#   No Horizon function mapped for TextColor.equals (run `match`, or map it in a --mappings file).
+# [[injection]]
+# id = "mixin-text-color-chroma-equality-fix"
+# kind = "RETURN"
+# target = "TODO"
+
+# Off: @Inject(HEAD) on Callback.onRemove (Callback.remove)
+#   No Horizon function mapped for Callback.onRemove (run `match`, or map it in a --mappings file).
+# [[injection]]
+# id = "callback-remove"
+# kind = "HEAD"
+# target = "TODO"
